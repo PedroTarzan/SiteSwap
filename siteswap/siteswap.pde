@@ -7,8 +7,8 @@ float ritmo=0.4;//duração em segundos de 1 tempo
 float g=-9.89;//aceleração da gravidade em m/s^2
 float hold=0.7*ritmo;//tempo em segundos que a bolinha fica na mão (escrito em fração do ritimo)
 
-float velocidade = 0.9;//Variável apra variar a velocidade de reprodução
-int padrao[]={3};
+float velocidade = 0.5;//Variável apra variar a velocidade de reprodução
+int padrao[]={};
 
 float tempos_0[]={};
 int Nbolas;
@@ -16,30 +16,51 @@ int bolas[]={};
 char mao[]={};
 int count;
 boolean pronto = false;
+boolean iniciar = false;
 
-float altura;//altura em metros que a altura da janela representará, isso definira toda a escala da animação este valor esta sendo calculado automaticamente na setup 
+float altura;//altura em metros que a altura da janela representará, isso definira toda a escala da animação este valor esta sendo algulado altomaticamente na setup 
 char periodicidade;
 
-//int hi = height/6;
-// int hf = (5*height)/6;
-// int raiozinho = 40;
-// int font_size = 32;
 
-//void mouseClicked()
-//{
-// int i=0, j=0, px=0, py=0;
- 
- 
-//   for(py=hi, i=0;i<4;py+=(hf-hi)/4, i++)
-// {
-//   for(px=0, j=0;j<4;px+=width/4,j++)
-//   {
-//     rect(px,py,width/4,(hf-hi)/4,raiozinho);
-//   }
-// }
-//}
 
-float metros2pixels(float metros)//conversão de ditancia linear de meltros para pixel
+void mouseClicked()
+{
+ int i=0, j=0, px=0, py=0;
+ int hi = height/6;
+ int hf = (5*height)/6;
+ int raiozinho = 40;
+ 
+ int tecla;
+ for(py=hi, i=0;i<4;py+=(hf-hi)/4, i++)
+ {
+   for(px=0, j=0;j<4;px+=width/4,j++)
+   {
+     if(mouseY < (py+(hf-hi)/4))
+     {
+       if(mouseY > py)
+       {
+         if(mouseX < (px+width/4))
+         {
+           if(mouseX > px)
+           {
+             tecla=i*4+j;
+             //println(tecla);
+             padrao=append(padrao,tecla);
+           }
+         }
+       }
+     }
+   }
+ }
+ 
+ if(mouseY>5*height/6)
+ {
+   iniciar = true;
+ }
+ 
+}
+
+float metros2pixels(float metros)//conversão de sitancia linear de meltros para pixel
 {
   return((height*metros)/altura);
 }
@@ -116,83 +137,158 @@ float altura_calc(int N)//calcula a altura de um lançamento N (para N inpar >2)
 
 void menu()//função onde será implementado um meno para saber qual o padrão e qual as cores da bolinha
 {
-  
+ int i=0, j=0, px=0, py=0;
+ char letra = '0';
+ int hi = height/6;
+ int hf = (5*height)/6;
+ int raiozinho = 40;
+ int font_size = 32;
+ 
+ background(0);//fundo preto
+ 
+ fill(255);
+ 
+ for(py=hi, i=0;i<4;py+=(hf-hi)/4, i++)
+ {
+   for(px=0, j=0;j<4;px+=width/4,j++)
+   {
+     rect(px,py,width/4,(hf-hi)/4,raiozinho);
+   }
+ }
+ 
+ delay(100);
+ 
+ fill(0);
+ textSize(font_size);
+ 
+ for(py=hi+((hf-hi)/8)+(font_size/2), i=0;i<4;py+=(hf-hi)/4, i++)
+ {
+   for(px=(width/8)-(font_size/2), j=0;j<4;px+=width/4,j++)
+   {
+     text(letra++, px, py);
+     if(letra==':')
+       letra = 'A';
+     //rect(px,py,width/4,(hf-hi)/4,raiozinho);
+   }
+ }
+ 
+ fill(255);
+ rect(0,0,width,height/6,raiozinho);
+ fill(0,255,0);
+ rect(0,5*height/6,width,height/6,raiozinho);
+ 
+ fill(0);
+ textSize(font_size);
+ text("START", width/2-1.5*font_size, (11*height/12)+font_size/2);
+ 
+ for(i=0; i<padrao.length; i++)
+ {
+   fill(0);
+   textSize(font_size);
+   letra = '0';
+   for(j=0;j<padrao[i];j++,letra++){
+     if(letra==':')
+       letra = 'A';
+   }
+   if(letra==':')
+       letra = 'A';
+   text(letra, 0.05*width+(font_size*i), (height/12)+font_size/2);
+ }
+   
 }
 
 void setup() 
+{
+  
+  
+  size(1000, 700);//tamnho da janela em pixels para o computador
+  //size(screenWidth, screenHeight); //tamnho da janela para o iphone
+  noStroke();//sem borda (seja lá o que isso signifique
+  
+}
+
+void init()
 {
   int i;
   int soma;
   int maior_lancamento=0;
   char aux;
   
-  size(1000, 700);//tamnho da janela em pixels para o computador
-  //size(screenWidth, screenHeight); //tamnho da janela para o iphone
-  noStroke();//sem borda (seja lá o que isso signifique
-  
-  menu();
-  
   for(i=0,soma=0;i<padrao.length;i++)
-  {
-    soma=soma+padrao[i];
-    
-    if(padrao[i]>maior_lancamento)
     {
-      maior_lancamento=padrao[i];
-    }
-  }
-  
-  Nbolas=soma/padrao.length;
-
-  altura = (altura_calc(maior_lancamento)+hmao+dbola/2)*1.1;//a;tura da bolinha + a distancia da mão ao fim da janela + o raio da bolinha + 10% para ficar visualmente mais agradevel
-  
-  if(padrao.length%2==0)
-    periodicidade='p';
-  else
-    periodicidade='i';
-  
-    
-  for(aux = 'd', count=0;count<Nbolas;count++)
-  {
-    bolas=append(bolas, padrao[count%padrao.length]);
-    mao=append(mao, aux);
-    if(aux=='d')
-      aux = 'e';
-    else
-      aux = 'd';
+      soma=soma+padrao[i];
       
-    tempos_0=append(tempos_0,count*ritmo);
-  }
+      if(padrao[i]>maior_lancamento)
+      {
+        maior_lancamento=padrao[i];
+      }
+    }
+    
+    Nbolas=soma/padrao.length;
+  
+    altura = (altura_calc(maior_lancamento)+hmao+dbola/2)*1.1;//a;tura da bolinha + a distancia da mão ao fim da janela + o raio da bolinha + 10% para ficar visualmente mais agradevel
+    
+    if(padrao.length%2==0)
+      periodicidade='p';
+    else
+      periodicidade='i';
+    
+      
+    for(aux = 'd', count=0;count<Nbolas;count++)
+    {
+      bolas=append(bolas, padrao[count%padrao.length]);
+      mao=append(mao, aux);
+      if(aux=='d')
+        aux = 'e';
+      else
+        aux = 'd';
+        
+      tempos_0=append(tempos_0,count*ritmo);
+    }
 }
 
 void draw() 
 {
   float tempo;
   int cor[]={255,0,0};
-  
   int i;
   
-  tempo=(millis()/1000.0)*velocidade;//convertendo o tempo apra segundos a adicionando velocidade de reprodução
-
-  background(0);//fundo preto
   
-  for(i=0;i<Nbolas;i++)
+  if(!pronto)
   {
-    ball(tempo, tempos_0[i], mao[i], bolas[i], cor);
-  }
+    menu();
   
-  for(i=0;i<Nbolas;i++)
-  {
-    if(tempo>(tempos_0[i]+bolas[i]*ritmo))
+    if(iniciar)
     {
-      tempos_0[i] = tempo;
+      init();
+      pronto = true;
+    }
       
-      if(((mao[i] == 'd')&&(bolas[i]%2==0))||((mao[i] == 'e')&&(bolas[i]%2==1)))
-        mao[i] = 'd';
-      else
-        mao[i] = 'e';
-      
-      bolas[i]=padrao[(count++)%padrao.length];
+  }
+  else
+  {
+    tempo=(millis()/1000.0)*velocidade;//convertendo o tempo apra segundos a adicionando velocidade de reprodução
+
+    background(0);//fundo preto
+    
+    for(i=0;i<Nbolas;i++)
+    {
+      ball(tempo, tempos_0[i], mao[i], bolas[i], cor);
+    }
+    
+    for(i=0;i<Nbolas;i++)
+    {
+      if(tempo>(tempos_0[i]+bolas[i]*ritmo))
+      {
+        tempos_0[i] = tempo;
+        
+        if(((mao[i] == 'd')&&(bolas[i]%2==0))||((mao[i] == 'e')&&(bolas[i]%2==1)))
+          mao[i] = 'd';
+        else
+          mao[i] = 'e';
+        
+        bolas[i]=padrao[(count++)%padrao.length];
+      }
     }
   }
 } 
