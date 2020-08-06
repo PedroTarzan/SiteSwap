@@ -1,3 +1,4 @@
+//comentario de teste
 //variaveis que podem ser alteradas para mudar o comportamento
 float dbola=0.15;//diamentro da bolinha
 float hmao=0.3;//distancia em metros da mão até o fim da janela
