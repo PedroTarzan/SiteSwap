@@ -28,7 +28,6 @@ void mouseClicked()
  int i=0, j=0, px=0, py=0;
  int hi = height/6;
  int hf = (5*height)/6;
- int raiozinho = 40;
  
  int tecla;
  for(py=hi, i=0;i<4;py+=(hf-hi)/4, i++)
