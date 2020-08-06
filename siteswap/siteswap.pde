@@ -30,33 +30,36 @@ void mouseClicked()
  int hf = (5*height)/6;
  
  int tecla;
- for(py=hi, i=0;i<4;py+=(hf-hi)/4, i++)
+ 
+ if(!iniciar)
  {
-   for(px=0, j=0;j<4;px+=width/4,j++)
+   for(py=hi, i=0;i<4;py+=(hf-hi)/4, i++)
    {
-     if(mouseY < (py+(hf-hi)/4))
+     for(px=0, j=0;j<4;px+=width/4,j++)
      {
-       if(mouseY > py)
+       if(mouseY < (py+(hf-hi)/4))
        {
-         if(mouseX < (px+width/4))
+         if(mouseY > py)
          {
-           if(mouseX > px)
+           if(mouseX < (px+width/4))
            {
-             tecla=i*4+j;
-             //println(tecla);
-             padrao=append(padrao,tecla);
+             if(mouseX > px)
+             {
+               tecla=i*4+j;
+               //println(tecla);
+               padrao=append(padrao,tecla);
+             }
            }
          }
        }
      }
    }
+   
+   if(mouseY>5*height/6)
+   {
+     iniciar = true;
+   }
  }
- 
- if(mouseY>5*height/6)
- {
-   iniciar = true;
- }
- 
 }
 
 float metros2pixels(float metros)//conversão de sitancia linear de meltros para pixel
@@ -155,7 +158,7 @@ void menu()//função onde será implementado um meno para saber qual o padrão 
    }
  }
  
- delay(100);
+ //delay(100);
  
  fill(0);
  textSize(font_size);
@@ -261,6 +264,10 @@ void draw()
     {
       init();
       pronto = true;
+      //for(i=0; i<tempos_0.length;i++)
+      //{
+      //  println(tempos_0[i]);
+      //}
     }
       
   }
