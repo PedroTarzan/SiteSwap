@@ -10,6 +10,7 @@ float hold=0.7*ritmo;//tempo em segundos que a bolinha fica na mão (escrito em 
 float velocidade = 0.9;//Variável apra variar a velocidade de reprodução
 int padrao[]={3};
 
+int maior_lancamento=0;
 float tempos_0[]={};
 int Nbolas;
 int bolas[]={};
@@ -19,6 +20,9 @@ boolean pronto = false;
 
 float altura;//altura em metros que a altura da janela representará, isso definira toda a escala da animação este valor esta sendo calculado automaticamente na setup 
 char periodicidade;
+
+PImage rosto_facil_d;
+PImage rosto_facil_e;
 
 //int hi = height/6;
 // int hf = (5*height)/6;
@@ -123,8 +127,10 @@ void setup()
 {
   int i;
   int soma;
-  int maior_lancamento=0;
   char aux;
+  
+  rosto_facil_d = loadImage("santi_facil_d.jpg");
+  rosto_facil_e = loadImage("santi_facil_e.jpg");
   
   size(1000, 700);//tamnho da janela em pixels para o computador
   //size(screenWidth, screenHeight); //tamnho da janela para o iphone
@@ -170,14 +176,29 @@ void draw()
   float tempo;
   int cor[]={255,0,0};
   
-  int i;
+  int i=0;
   
   tempo=(millis()/1000.0)*velocidade;//convertendo o tempo apra segundos a adicionando velocidade de reprodução
 
   background(0);//fundo preto
   
-  for(i=0;i<Nbolas;i++)
+  if (maior_lancamento<5)
   {
+    if(((mao[i] == 'd')&&(bolas[i]%2==0))||((mao[i] == 'e')&&(bolas[i]%2==1)))
+    {
+      if(maior_lancamento<5)
+      {
+        image(rosto_facil_d, x(-0.2), y(1), width/6, height/5);
+      }
+    }
+    else
+    {
+      image(rosto_facil_e, x(-0.2), y(1), width/6, height/5);
+    }
+  }
+  
+  for(i=0;i<Nbolas;i++)
+  {    
     ball(tempo, tempos_0[i], mao[i], bolas[i], cor);
   }
   
