@@ -1,68 +1,76 @@
 //variaveis de personalizaçao do usuario
 float velocidade = 0.9;//Variável apra variar a velocidade de reprodução
-int padrao[]={5,3,1};
+int padrao[]={3};
 int grafico=0;//qual o grafico que vai ser gerado.
 
 void dados0()//É chamada pela modelo() e desenha as linhas dos lançamentos de cada bolinha
 {
-  int i,j;
+  int i,j,k;
+  k=0;
   j=0;
   
-  for(i=0;i<padrao.length;i++)
+  while(k<18)
   {
-    if(j%2==0)
+    for(i=0;i<padrao.length;i++)
     {
-      if(padrao[i]%2==0)
+      if(j%2==0)
       {
-        curve(10, 30, 300, 30, 300, 300, 10, 300);
-        stroke(0);
-      }
+        if(padrao[i]%2==0)
+        {
+          noFill();
+          stroke(0);
+          curve(200, 50+45*j , 450, 50+45*j, 450, (50+45*j)+45*padrao[i], 200, (50+45*j)+45*padrao[i]);
+        }
+        else
+        {
+          line(450,50+45*j,550,(50+45*j)+45*padrao[i]);
+        }
+      }      
       else
-      {
-        line(450,50+45*j,550,(50+45*j)+45*padrao[i]);
+      {                       
+        if(padrao[i]%2==0)
+        {
+          noFill();
+          stroke(0);
+          curve(800, 50+45*j, 550, 50+45*j, 550, (50+45*j)+45*padrao[i], 800, (50+45*j)+45*padrao[i]);
+        }
+        else
+        {
+          line(550,50+45*j,450,(50+45*j)+45*padrao[i]);
+        }
       }
-    }      
-    else
-    {                       
-      if(padrao[i]%2==0)
-      {
-    
-      }
-      else
-      {
-        line(550,50+45*j,450,(50+45*j)+45*padrao[i]);
-      }
-    }
-    j++;
-    
-    //if(i+1==padrao.length)
-    //{
-    //  if(j%2==0)
-    //  {
-    //    if(padrao[i+1]%2==0)
-    //    {
-    //      curve(10, 30, 300, 30, 300, 300, 10, 300);
-    //      stroke(0);
-    //    }
-    //    else
-    //    {
-    //      line(450,50+45*j,550,(50+45*j)+45*padrao[i+1]);
-    //    }
-    //  }      
-    //  else
-    //  {
-    //    if(padrao[i+1]%2==0)
-    //    {
+      j++;
+      k++;
       
-    //    }
-    //    else
-    //    {
-    //      line(550,50+45*j,450,(50+45*j)+45*padrao[i+1]);
-    //    }
-    //  }
-    //  j++;        
-    //  i=0;
-    //}
+      //if(i+1==padrao.length)
+      //{
+      //  if(j%2==0)
+      //  {
+      //    if(padrao[i+1]%2==0)
+      //    {
+      //      curve(10, 30, 300, 30, 300, 300, 10, 300);
+      //      stroke(0);
+      //    }
+      //    else
+      //    {
+      //      line(450,50+45*j,550,(50+45*j)+45*padrao[i+1]);
+      //    }
+      //  }      
+      //  else
+      //  {
+      //    if(padrao[i+1]%2==0)
+      //    {
+        
+      //    }
+      //    else
+      //    {
+      //      line(550,50+45*j,450,(50+45*j)+45*padrao[i+1]);
+      //    }
+      //  }
+      //  j++;        
+      //  i=0;
+      //}
+    }
   }
 }
 
