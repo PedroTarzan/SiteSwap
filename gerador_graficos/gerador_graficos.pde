@@ -1,15 +1,32 @@
 //variaveis de personalizaçao do usuario
 float velocidade = 0.9;//Variável apra variar a velocidade de reprodução
-int padrao[]={3};
+int padrao[]={5,2,5};
 int grafico=0;//qual o grafico que vai ser gerado.
+int rep=3;//quantas vezes o padrao vai ser desenhado na tabela
+
+//variaveis de uso do programa
+int Nbolas;
+
+
+void calc_pad()
+{
+  int i;
+  int s=0;
+  
+  for(i=0;i<padrao.length;i++)
+  {
+    s=s+padrao[i];
+  }
+  Nbolas=s/padrao.length;
+  println(s);
+}
 
 void dados0()//É chamada pela modelo() e desenha as linhas dos lançamentos de cada bolinha
 {
-  int i,j,k;
-  k=0;
-  j=0;
+  int i;
+  int j=0,k=0;
   
-  while(k<18)
+  while(k<rep)
   {
     for(i=0;i<padrao.length;i++)
     {
@@ -39,38 +56,9 @@ void dados0()//É chamada pela modelo() e desenha as linhas dos lançamentos de 
           line(550,50+45*j,450,(50+45*j)+45*padrao[i]);
         }
       }
-      j++;
-      k++;
-      
-      //if(i+1==padrao.length)
-      //{
-      //  if(j%2==0)
-      //  {
-      //    if(padrao[i+1]%2==0)
-      //    {
-      //      curve(10, 30, 300, 30, 300, 300, 10, 300);
-      //      stroke(0);
-      //    }
-      //    else
-      //    {
-      //      line(450,50+45*j,550,(50+45*j)+45*padrao[i+1]);
-      //    }
-      //  }      
-      //  else
-      //  {
-      //    if(padrao[i+1]%2==0)
-      //    {
-        
-      //    }
-      //    else
-      //    {
-      //      line(550,50+45*j,450,(50+45*j)+45*padrao[i+1]);
-      //    }
-      //  }
-      //  j++;        
-      //  i=0;
-      //}
+      j++;      
     }
+    k++;
   }
 }
 
@@ -117,6 +105,9 @@ void setup()
   size(1000,900);
   noStroke();
   
+  calc_pad();
+  
+  //A partir daqui, essas funcoes devem estar da draw para poder desenhar as bolinhas se movimentando
   modelo(grafico);
 
   
