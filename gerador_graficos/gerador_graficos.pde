@@ -1,11 +1,15 @@
 //variaveis de personalizaçao do usuario
 float velocidade = 0.9;//Variável apra variar a velocidade de reprodução
-int padrao[]={5,2,5};
+int padrao[]={6,3,1,4,1};
 int grafico=0;//qual o grafico que vai ser gerado.
 int rep=3;//quantas vezes o padrao vai ser desenhado na tabela
 
 //variaveis de uso do programa
-int Nbolas;
+int Nbolas;//quantas bolinhas sao nesessarias para o padrao
+int Qbola[]={};//Controla qual bola está sendo lançada
+
+/*Tarefa atual:
+*/
 
 
 void calc_pad()
@@ -18,7 +22,54 @@ void calc_pad()
     s=s+padrao[i];
   }
   Nbolas=s/padrao.length;
-  println(s);
+}
+
+void Qbola_init() //Faz o tamanho de Qbola ser=Nbolas e coloca um 0 em todas as posiçoes
+{
+  int i;
+  for(i=0;i<Nbolas;i++)
+  {
+    Qbola=append(Qbola,0);
+  }
+}
+
+void Qbola_pre(int l) //Checa qual é a primeira posiçao que contém um 0 e transforma ela no lançamento atual
+{
+  int i;
+  for(i=0;i<Nbolas;i++)
+  {
+    if(Qbola[i]==0)
+    {
+      Qbola[i]=l;
+      break;
+    }
+  }
+}
+
+void Qbola_pos() //reduz em 1 cada posicao de Qbola até um minimo de 0
+{
+  int i;
+  for(i=0;i<Nbolas;i++)
+  {
+    if(Qbola[i]>0)
+    {
+      Qbola[i]--;
+      println(Qbola[i]);
+    }
+  }
+}
+
+int colorR()
+{
+  return 0;
+}
+int colorG()
+{
+  return 0;
+}
+int colorB()
+{
+  return 0;
 }
 
 void dados0()//É chamada pela modelo() e desenha as linhas dos lançamentos de cada bolinha
@@ -30,16 +81,18 @@ void dados0()//É chamada pela modelo() e desenha as linhas dos lançamentos de 
   {
     for(i=0;i<padrao.length;i++)
     {
+      Qbola_pre(padrao[i]);
       if(j%2==0)
       {
         if(padrao[i]%2==0)
         {
           noFill();
-          stroke(0);
+          stroke(colorR(),colorG(),colorB());
           curve(200, 50+45*j , 450, 50+45*j, 450, (50+45*j)+45*padrao[i], 200, (50+45*j)+45*padrao[i]);
         }
         else
         {
+          stroke(colorR(),colorG(),colorB());
           line(450,50+45*j,550,(50+45*j)+45*padrao[i]);
         }
       }      
@@ -48,15 +101,17 @@ void dados0()//É chamada pela modelo() e desenha as linhas dos lançamentos de 
         if(padrao[i]%2==0)
         {
           noFill();
-          stroke(0);
+          stroke(colorR(),colorG(),colorB());
           curve(800, 50+45*j, 550, 50+45*j, 550, (50+45*j)+45*padrao[i], 800, (50+45*j)+45*padrao[i]);
         }
         else
         {
+          stroke(colorR(),colorG(),colorB());
           line(550,50+45*j,450,(50+45*j)+45*padrao[i]);
         }
       }
-      j++;      
+      j++;
+      Qbola_pos();
     }
     k++;
   }
@@ -106,6 +161,7 @@ void setup()
   noStroke();
   
   calc_pad();
+  Qbola_init();
   
   //A partir daqui, essas funcoes devem estar da draw para poder desenhar as bolinhas se movimentando
   modelo(grafico);
