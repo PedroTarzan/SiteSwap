@@ -1,7 +1,7 @@
 //variaveis de personalizaçao do usuario
 //float velocidade = 0.9;//Variável apra variar a velocidade de reprodução.
-int padrao[]={7,4,4};
-int grafico=0;//qual o grafico que vai ser gerado.
+int padrao[]={5,5,2};
+int grafico=1;//qual o grafico que vai ser gerado.
 int rep=0;//quantas vezes o padrao vai ser desenhado na tabela
 
 //variaveis de uso do programa
@@ -13,24 +13,8 @@ float paleta_cores[][];
 float R[]={},G[]={},B[]={};//Vetores para guardar as cores de cada bolinha (cor da bolinha 0 = R[0], G[0] e B[0])
 
 /*Tarefa atual:
-Escrever os outros tipos de grafico;
-opcao 1
-{
-  Qbola pre
-  loop para imprimir a letra "X" numa ccordenada x+45*Qbola[i](ou algo parecido) //Como colocar as cores certas?
-  Qbola pos
-}
-opcao 2 //vou tentar essa primeiro
-{
-  Qbola pre
-  variavel temporaria para salvar o numero no Qbola[i]
-  loop que imrime a letra "X" na cor indicada pela contagem, mudando as coordenadas x e y, e reduz a variavel temporaria
-  Qbola pos
-}
-Tarefa secundaria
 Desenhar as bolinhas coloridas; +
-Cor definida automaticamente; - Até 5 bolinhas. E acho que com 5 bolas está errado, mas funciona
-Gerar as cores automaticamente
+Gerar as cores automaticamente; -
 */
 
 
@@ -125,17 +109,17 @@ void paleta_cores_init()
     G=append(G,255*0);
     B=append(B,255*0);
     
+    R=append(R,255*0.5);
+    G=append(G,255*0.5);
+    B=append(B,255*0);
+    
     R=append(R,255*0);
     G=append(G,255*0.5);
     B=append(B,255*0.5);
     
-    R=append(R,255*0.3);
-    G=append(G,255*0.6);
-    B=append(B,255*0);
-    
-    R=append(R,255*0.3);
+    R=append(R,255*0.5);
     G=append(G,255*0);
-    B=append(B,255*0.6);
+    B=append(B,255*0.5);
   }
   else if(Nbolas==5)
   {
@@ -217,11 +201,15 @@ void dados1()
     for(i=0;i<padrao.length;i++)
     {
       Qbola_pre(padrao[i]);
-      Qbola_controle=Qbola[contagem];
       
+      textSize(32);//write the pattern numbers
+      fill(R[contagem],G[contagem],B[contagem]);
+      text(padrao[i],50,85+45*l);
+      
+      Qbola_controle=Qbola[contagem];
       for(j=0;j<Qbola_controle;j++)
       {
-        textSize(32);
+        textSize(32);//write the X's
         fill(R[contagem],G[contagem],B[contagem]);
         text('X',68+(Qbola_controle-j)*45,85+45*j+45*l);
       }
@@ -232,10 +220,51 @@ void dados1()
   }
 }
 
-void modelo()//Decide qual o modelo de tabela foi pedido, desenha a estrutura básica e chama a funcao dados"X"
+void dados2()
+{
+  int i,j;
+  int k=0;
+  
+  for(i=0;i<rep;i++)//draw the numbers of the pattern inside the squares
+  {
+    for(j=0;j<padrao.length;j++)
+    {
+      Qbola_pre(padrao[j]);
+      
+      textSize(20);//draw the numbers
+      fill(R[contagem],G[contagem],B[contagem]);
+      text(padrao[j],53+k*30,460);
+      
+      noFill();//draw the throwings
+      stroke(R[contagem],G[contagem],B[contagem]);
+      curve(65+30*k, 600+100*padrao[j] , 65+30*k, 430, 65+(30*k)+(30*padrao[j]), 430, 65+(30*k)+(30*padrao[j]), 600+100*padrao[j]);
+      
+      if(k%2==0)
+      {
+        textSize(20);//draw the right hand (R)
+        fill(0);
+        text('R',53+k*30,485);
+      }
+      else
+      {
+        textSize(20);//draw the left hand (L)
+        fill(0);
+        text('L',53+k*30,485);
+      }
+      k++;
+      
+      Qbola_pos();
+      if (k==30)
+        break;
+    }
+    if (k==30)
+      break;
+  }
+}
+
+void modelo()//Checa qual o modelo de tabela foi pedido, desenha a estrutura básica e chama a funcao dados"X"
 {
   int i;
-  int j=0,k=0;
   int max;
   
   background(255);
@@ -266,35 +295,22 @@ void modelo()//Decide qual o modelo de tabela foi pedido, desenha a estrutura b�
     {
       line(50,50+45*i,max,50+45*i);
     } 
-    
-    while(k<rep)//write the pattern numbers
-    {
-      for(i=0;i<padrao.length;i++)
-      {
-        Qbola_pre(padrao[i]);
-        
-        textSize(32);
-        fill(R[contagem],G[contagem],B[contagem]);
-        text(padrao[i],50,85+45*j);
-        
-        j++;
-        Qbola_pos();
-      }
-      k++;
-    }
-    
-    for(i=0;i<Nbolas;i++)//reset Qbola
-    {
-      if(Qbola[i]>0)
-      {
-        Qbola[i]=0;
-      }
-    }
+
     dados1();
   }
   else if (grafico==2)
   {
-    //dados2();
+    stroke(0);
+    line(50,435,950,435);
+    stroke(0);
+    line(50,465,950,465);
+    
+    for(i=0;i<31;i++)
+    {
+      stroke(0);
+      line(50+30*i,465,50+30*i,435);
+    }
+    dados2();
   }
   else
   {
@@ -330,6 +346,7 @@ void setup()
   noStroke(); //to roubando
   fill(255,255,255);
   rect(0, 865, 1000, 900);
+  rect(952, 0, 1000, 900);
 
   
 }
