@@ -1,0 +1,1 @@
+& 'C:\Program Files\processing-3.5.4\processing-java' --sketch=C:\Users\luanh\OneDrive\Documents\git\SiteSwap\gerador_graficos --force --run
