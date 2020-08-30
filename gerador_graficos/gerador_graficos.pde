@@ -1,7 +1,15 @@
+enum pattern_type 
+{
+  ERROR, 
+  REGULAR, 
+  EXCITED;
+}
+
 //variaveis de personalizaçao do usuario
 //float velocidade = 0.9;//Variável apra variar a velocidade de reprodução.
-int padrao[]={5,5,2};
-int grafico=1;//qual o grafico que vai ser gerado.
+int padrao[]={1,4,4};
+int start[]={};
+int grafico=0;//qual o grafico que vai ser gerado.
 int rep=0;//quantas vezes o padrao vai ser desenhado na tabela
 
 //variaveis de uso do programa
@@ -17,23 +25,80 @@ Desenhar as bolinhas coloridas; +
 Gerar as cores automaticamente; -
 */
 
-
-void calc_pad()//Define Nbolas
+pattern_type pattern_analyser()
 {
-  int i;
-  int s=0;
+  int i, j, begin;
+  int sum=0;
+  boolean hole;
   
   for(i=0;i<padrao.length;i++)
   {
-    s=s+padrao[i];
+    sum=sum+padrao[i];
   }
-  Nbolas=s/padrao.length;
 
+  //valid pattern?
+  if(sum%padrao.length != 0)
+  {
+    return pattern_type.ERROR;
+  }
+
+
+  Nbolas=sum/padrao.length;
   for(i=0;i<padrao.length;i++)
   {
     if(padrao[i]>Hthrow)
     Hthrow=padrao[i];
   }
+
+  //excited pattern?
+  hole=true;
+  for(begin=0; begin<Nbolas && hole; begin++)
+  {
+    hole=false;
+    for(j=0, i=begin; j<Nbolas; j++, i++)
+    {
+      if(padrao[i%padrao.length] < Nbolas-j)
+        hole = true;
+    }
+  }
+  begin--;
+
+  if(hole)
+  {
+    //discovering the start (hard case)
+
+    return pattern_type.EXCITED;
+  }
+  else if(begin!=0)
+  {
+    //discovering the start (easy case)
+    for(i=begin; i<padrao.length; i++)
+    {
+      start = append(start, padrao[i]);
+    }
+    
+    //Pedro, remember to add a mensage in processing screen, and not only on terminal
+    print("There is a non-excited version of this pattern, just start in the ");
+    print(begin+1);
+    switch (begin+1)//English, you does not make any easy! 
+    {
+      case 1: //can not be! (because begin!=0)
+        println("st trow!");  
+        break;
+      case 2: 
+        println("nd trow!");  
+        break;
+      case 3: 
+        println("rd trow!");  
+        break;
+      default :
+        println("th trow!");
+      break;	
+    }
+    return pattern_type.EXCITED;
+  }
+
+  return pattern_type.REGULAR;
 }
 
 void Qbola_init() //Faz o tamanho de Qbola ser=Nbolas e coloca um 0 em todas as posiçoes
@@ -142,7 +207,17 @@ void paleta_cores_init()
     R=append(R,255*0.5);
     G=append(G,255*0.6);
     B=append(B,255*0);
-  }  
+  } 
+  else
+  {
+    int i;
+    for(i=0;i<Nbolas;i++)
+    {
+      R=append(R,0);
+      G=append(G,0);
+      B=append(B,0);
+    }
+  }
 }
 
 void dados0()//É chamada pela modelo() e desenha as linhas dos lançamentos de cada bolinha
@@ -330,8 +405,24 @@ void setup()
 {
   size(1000,900);
   noStroke();
+
+  switch (pattern_analyser()) {
+    case ERROR: 
+      println("Error!");  //Pedro, remember to add a mensage in processing screen, and not only on terminal
+      break;
+    case REGULAR: 
+      println("Regular!");  
+      break;
+    case EXCITED: 
+      println("Exitado!");
+      println("Start sequence:");
+      for(int i = 0; i<start.length; i++)
+      {
+        println(start[i]);
+      }
+      break;
+  }
   
-  calc_pad();
   
   if(rep==0)
   rep=Hthrow;
